@@ -58,17 +58,25 @@ CREATE TABLE Medication
 
 CREATE TABLE Bill
 (
-
+    BillID NUMBER UNIQUE,
+    FinalCost NUMBER
+    CONSTRAINT Bill_pk PRIMARY KEY (BillID)
 );
 
 CREATE TABLE Procedure
 (
-
+    ProcedureID NUMBER UNIQUE, 
+    Name VARCHAR(50),
+    Cost NUMBER
+    CONSTRAINT Procedure_pk PRIMARY KEY (ProcedureID) 
 );
 
 CREATE TABLE Room 
 (
-
+    RoomID NUMBER UNIQUE,
+    RoomNumber NUMBER, 
+    Unavaliable BOOLEAN, 
+    CONSTRAINT Room_pk PRIMARY KEY (RoomID)
 );
 
 
