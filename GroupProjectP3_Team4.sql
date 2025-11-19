@@ -56,3 +56,19 @@ CREATE TABLE Medication
     CONSTRAINT Medication_pk PRIMARY KEY (MedicationID)
 );
 
+CREATE TABLE Bill
+(
+
+);
+
+CREATE TABLE Procedure
+(
+
+);
+
+CREATE TABLE Room 
+(
+
+);
+
+
