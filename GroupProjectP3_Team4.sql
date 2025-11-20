@@ -149,6 +149,19 @@ CREATE TABLE Bill
     CONSTRAINT Bill_patient_fk FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
 );
 
+CREATE SEQUENCE Patient_pk
+    START WITH 1
+    INCREMENT BY 1;
+
+CREATE SEQUENCE Appointment_pk
+    START WITH 1
+    INCREMENT BY 1;
+
+CREATE SEQUENCE Prescription_pk
+    START WITH 1
+    INCREMENT BY 1;
+
+
 
 
 
