@@ -52,9 +52,9 @@ CREATE TABLE LOCATEDIN
     RoomID Number NOT NULL,
     DepartmentID NUMBER NOT NULL,
     CONSTRAINT RoomDepartment_pk PRIMARY KEY (RoomID, DepartmentID),
-    CONSTRAINT RoomDepartment_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
+    CONSTRAINT RoomDepartment_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID),
     CONSTRAINT RoomDepartment_deparment_fk FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
-)
+);
 
 CREATE TABLE Appointment
 (
@@ -76,7 +76,7 @@ CREATE TABLE AssignedTo
     NurseID NUMBER,
     CONSTRAINT Appointment_nurse_pk PRIMARY KEY (AppointmentID, NurseID),
     CONSTRAINT Appointment_nurse_appointment_fk FOREIGN KEY (AppointmentID) REFERENCES Appointment(AppointmentID),
-    CONSTRAINT Appointment_nurse_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID),
+    CONSTRAINT Appointment_nurse_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID)
 );
 
 CREATE TABLE Medication 
@@ -128,12 +128,12 @@ CREATE TABLE Stay
     PatientID       NUMBER,
     PhysicianID     NUMBER,
     RoomID          NUMBER,
-    CONSTRAINT Stay_pk PRIMARY KEY (StayID)
+    CONSTRAINT Stay_pk PRIMARY KEY (StayID),
     CONSTRAINT Stay_patient_fk FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
     CONSTRAINT Stay_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID),
     CONSTRAINT Stay_physican_fk FOREIGN KEY (PhysicianID) REFERENCES Physician(PhysicianID),
-    CONSTRAINT Stay_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
-    CONSTRAINT Stay_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID),
+    CONSTRAINT Stay_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID),
+    CONSTRAINT Stay_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID)
 );
 
 
