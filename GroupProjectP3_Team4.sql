@@ -1,3 +1,7 @@
+CREATE INDEX idx_patient_lastname ON Patient(LastName);
+CREATE INDEX idx_physician_lastname ON Physician(LastName);
+CREATE INDEX idx_nurse_lastname ON Nurse(LastName);
+
 CREATE TABLE Patient
 (
     PatientID           NUMBER UNIQUE,
@@ -47,7 +51,7 @@ CREATE TABLE Room
     CONSTRAINT Room_pk PRIMARY KEY (RoomID)
 );
 
-CREATE TABLE LOCATEDIN
+CREATE TABLE LocatedIn
 (
     RoomID Number NOT NULL,
     DepartmentID NUMBER NOT NULL,
