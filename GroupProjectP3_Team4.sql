@@ -1,24 +1,14 @@
-CREATE TABLE Stay
+CREATE TABLE Patient
 (
-    StayID          NUMBER UNIQUE,
-    StartTime       TIMESTAMP,
-    EndTime         TIMESTAMP,
-    PatientID       NUMBER,
-    PhysicianID     NUMBER,
-    CONSTRAINT Stay_pk PRIMARY KEY (StayID)
+    PatientID           NUMBER UNIQUE,
+    FirstName           VARCHAR(50) NOT NULL,
+    LastName            VARCHAR(50) NOT NULL,
+    DOB                 DATE NOT NULL,
+    InsuranceID         NUMBER,
+    CONSTRAINT Patient_pk PRIMARY KEY (PatientID)
 );
 
-CREATE TABLE Nurse
-(
-    NurseID     NUMBER UNIQUE,
-    FirstName   VARCHAR(50) NOT NULL,
-    LastName    VARCHAR(50) NOT NULL,
-    DOB         DATE NOT NULL,
-    StayID      NUMBER,
-    CONSTRAINT Nurse_pk PRIMARY KEY (NurseId)
-);
-
-CREATE TABLE Department
+CREATE TABLE Department 
 (
     DepartmentID    NUMBER UNIQUE,
     FloorNum        NUMBER,
@@ -34,17 +24,59 @@ CREATE TABLE Physician
     FirstName          VARCHAR(50) NOT NULL,
     LastName           VARCHAR(50) NOT NULL,
     DOB                DATE NOT NULL,
-    CONSTRAINT Physician_pk PRIMARY KEY (PhysicianID)
+    CONSTRAINT Physician_pk PRIMARY KEY (PhysicianID),
+    CONSTRAINT Physician_department_fk FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
 );
 
-CREATE TABLE Patient
+CREATE TABLE Nurse
 (
-    PatientID           NUMBER UNIQUE,
-    FirstName           VARCHAR(50) NOT NULL,
-    LastName            VARCHAR(50) NOT NULL,
-    DOB                 DATE NOT NULL,
-    InsuranceID         NUMBER,
-    CONSTRAINT Patient_pk PRIMARY KEY (PatientID)
+    NurseID     NUMBER UNIQUE,
+    FirstName   VARCHAR(50) NOT NULL,
+    LastName    VARCHAR(50) NOT NULL,
+    DOB         DATE NOT NULL,
+    StayID      NUMBER,
+    CONSTRAINT Nurse_pk PRIMARY KEY (NurseID),
+    CONSTRAINT Nurse_department_fk FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+);
+
+CREATE TABLE Room 
+(
+    RoomID NUMBER UNIQUE,
+    RoomNumber NUMBER, 
+    Unavaliable BOOLEAN, 
+    CONSTRAINT Room_pk PRIMARY KEY (RoomID)
+);
+
+CREATE TABLE LOCATEDIN
+(
+    RoomID Number NOT NULL,
+    DepartmentID NUMBER NOT NULL,
+    CONSTRAINT RoomDepartment_pk PRIMARY KEY (RoomID, DepartmentID),
+    CONSTRAINT RoomDepartment_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
+    CONSTRAINT RoomDepartment_deparment_fk FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+)
+
+CREATE TABLE Appointment
+(
+    AppointmentID NUMBER NOT NULL,
+    StartTime TIMESTAMP NOT NULL,
+    EndTiME TIMESTAMP NOT NULL,
+    PatientID NUMBER,
+    PhysicianID NUMBER,
+    NurseID NUMBER,
+    CONSTRAINT Appointment_pk PRIMARY KEY (AppointmentID),
+    CONSTRAINT Appointment_patient_fk FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
+    CONSTRAINT Appointment_physician_fk FOREIGN KEY (PhysicianID) REFERENCES Physician(PhysicianID),
+    CONSTRAINT Appointment_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID)
+);
+
+CREATE TABLE AssignedTo
+(
+    AppointmentID NUMBER,
+    NurseID NUMBER,
+    CONSTRAINT Appointment_nurse_pk PRIMARY KEY (AppointmentID, NurseID),
+    CONSTRAINT Appointment_nurse_appointment_fk FOREIGN KEY (AppointmentID) REFERENCES Appointment(AppointmentID),
+    CONSTRAINT Appointment_nurse_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID),
 );
 
 CREATE TABLE Medication 
@@ -54,13 +86,30 @@ CREATE TABLE Medication
     Description           VARCHAR(100),
     Name                  VARCHAR(50),
     CONSTRAINT Medication_pk PRIMARY KEY (MedicationID)
+
 );
 
-CREATE TABLE Bill
+CREATE TABLE Prescription
 (
-    BillID NUMBER UNIQUE,
-    FinalCost NUMBER
-    CONSTRAINT Bill_pk PRIMARY KEY (BillID)
+    PrescriptionID NUMBER,
+    MedicationCode NUMBER,
+    Dose VARCHAR(50) NOT NULL,
+    DatePrescribe Date NOT NULL,
+    PatientID NUMBER,
+    MedicationID NUMBER,
+    CONSTRAINT Prescription_pk PRIMARY KEY (PrescriptionID),
+    CONSTRAINT Prescription_patient_fk FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
+    CONSTRAINT Prescription_medication_fk FOREIGN KEY (MedicationID) REFERENCES Medication(MedicationID)
+    
+);
+
+CREATE TABLE Includes
+(
+    PrescriptionID NUMBER,
+    MedicationID NUMBER,
+    CONSTRAINT PrescriptionMedication_pk PRIMARY KEY (PrescriptionID, MedicationID),
+    CONSTRAINT PrescriptionMedication_medication_fk FOREIGN KEY (MedicationID) REFERENCES Medication(MedicationID),
+    CONSTRAINT PrescriptionMedication_prescription_fk FOREIGN KEY (PrescriptionID) REFERENCES Prescription(PrescriptionID)
 );
 
 CREATE TABLE Procedure
@@ -71,12 +120,33 @@ CREATE TABLE Procedure
     CONSTRAINT Procedure_pk PRIMARY KEY (ProcedureID) 
 );
 
-CREATE TABLE Room 
+CREATE TABLE Stay
 (
-    RoomID NUMBER UNIQUE,
-    RoomNumber NUMBER, 
-    Unavaliable BOOLEAN, 
-    CONSTRAINT Room_pk PRIMARY KEY (RoomID)
+    StayID          NUMBER UNIQUE,
+    StartTime       TIMESTAMP,
+    EndTime         TIMESTAMP,
+    PatientID       NUMBER,
+    PhysicianID     NUMBER,
+    RoomID          NUMBER,
+    CONSTRAINT Stay_pk PRIMARY KEY (StayID)
+    CONSTRAINT Stay_patient_fk FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
+    CONSTRAINT Stay_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID),
+    CONSTRAINT Stay_physican_fk FOREIGN KEY (PhysicianID) REFERENCES Physician(PhysicianID),
+    CONSTRAINT Stay_room_fk FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
+    CONSTRAINT Stay_nurse_fk FOREIGN KEY (NurseID) REFERENCES Nurse(NurseID),
 );
+
+
+CREATE TABLE Bill
+(
+    BillID NUMBER UNIQUE,
+    FinalCost NUMBER
+    CONSTRAINT Bill_pk PRIMARY KEY (BillID),
+    CONSTRAINT Bill_patient_fk FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+
+
+
+
 
 
